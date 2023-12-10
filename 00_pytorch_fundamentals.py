@@ -2,9 +2,9 @@ import torch
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-#
-# device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-#
+
+device = torch.device('cuda' if torch.cuda.is_available() else 'mps' if torch.backends.mps.is_available() else 'cpu')
+print(device)
 # scalar = torch.tensor(7)
 #
 # vector = torch.tensor([7, 7])
@@ -120,17 +120,47 @@ import matplotlib.pyplot as plt
 # # NumPy --> tensor = torch.from_numpy(ndarray)
 # # tensor --> NumPy torch.Tensor.numpy()
 
-array = np.arange(1.0, 8.0)
-tensor = torch.from_numpy(array).type(torch.float32) # will use float64 by default in PyTorch
-array = array + 1 # wont change values in tensor
+# array = np.arange(1.0, 8.0)
+# tensor = torch.from_numpy(array).type(torch.float32) # will use float64 by default in PyTorch
+# array = array + 1 # wont change values in tensor
+#
+# # print(f'array from numpy: {array} \ntensor created: {tensor}')
+# tensor = torch.ones(7)
+# numpy_arr = tensor.numpy()
+# tensor = tensor + 1 # numpy_arr will not change
+# print(numpy_arr, tensor)
 
-# print(f'array from numpy: {array} \ntensor created: {tensor}')
-tensor = torch.ones(7)
-numpy_arr = tensor.numpy()
-tensor = tensor + 1 # numpy_arr will not change
-print(numpy_arr, tensor)
+## reproducibility
+
+# to reduce randomness in neural networks PyTorch comes with the concept of random seed
+# -- flavors the randomness
 
 
+random_tensor_A = torch.rand(3, 4)
+random_tensor_B = torch.rand(3, 4)
+
+# print(random_tensor_B)
+# print(random_tensor_A)
+# print(random_tensor_A == random_tensor_B)
+
+# RANDOM_SEED = 42
+#
+# torch.manual_seed(RANDOM_SEED)
+# random_tensor_C = torch.rand(3, 4)
+#
+# torch.manual_seed(RANDOM_SEED)
+# random_tensor_D = torch.rand(3, 4)
+#
+# print(random_tensor_C)
+# print(random_tensor_D)
+# print(random_tensor_C == random_tensor_D)
+
+tensor = torch.tensor([1, 2, 3])
+tensor_on_mps = tensor.to(device)
+
+tensor_on_cpu = tensor_on_mps.cpu().numpy()
+
+print(tensor_on_cpu, tensor_on_mps)
 
 
 
