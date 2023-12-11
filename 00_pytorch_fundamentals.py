@@ -136,8 +136,8 @@ print(device)
 # -- flavors the randomness
 
 
-random_tensor_A = torch.rand(3, 4)
-random_tensor_B = torch.rand(3, 4)
+# random_tensor_A = torch.rand(3, 4)
+# random_tensor_B = torch.rand(3, 4)
 
 # print(random_tensor_B)
 # print(random_tensor_A)
@@ -155,12 +155,81 @@ random_tensor_B = torch.rand(3, 4)
 # print(random_tensor_D)
 # print(random_tensor_C == random_tensor_D)
 
-tensor = torch.tensor([1, 2, 3])
-tensor_on_mps = tensor.to(device)
+# tensor = torch.tensor([1, 2, 3])
+# tensor_on_mps = tensor.to(device)
+#
+# tensor_on_cpu = tensor_on_mps.cpu().numpy()
+# print(tensor_on_cpu, tensor_on_mps)
 
-tensor_on_cpu = tensor_on_mps.cpu().numpy()
+# EXERCISES
 
-print(tensor_on_cpu, tensor_on_mps)
+# 1. Create a random tensor with shape (7, 7).
+
+rand_tensor = torch.rand(7, 7)
+print(f'rand_tensor = {rand_tensor}')
+
+# 2. Perform a matrix multiplication on the tensor from 2 with another random tensor with shape (1, 7)
+# (hint: you may have to transpose the second tensor).
+
+rand_tensor_B = torch.rand(1, 7)
+B_reshaped = rand_tensor_B.reshape(7, 1)
+
+tensor_matmul = torch.matmul(rand_tensor, B_reshaped)
+print(f'b-reshaped * rand_tensor = {tensor_matmul}')
+
+# 3. Set the random seed to 0 and do exercises 2 & 3 over again.
+
+RANDOM_SEED = 0
+torch.manual_seed(RANDOM_SEED)
+rand_tensor_C = torch.rand(7, 7)
+
+torch.manual_seed(RANDOM_SEED)
+rand_tensor_D = torch.rand(1, 7)
+D_reshaped = rand_tensor_D.reshape(7, 1)
+tensor_D_C_matmul = torch.matmul(rand_tensor_C, D_reshaped)
+
+print(f'RANDOM SEEDING\nrand_tensor_C * D_reshaped = {tensor_D_C_matmul}')
+
+# 4. Speaking of random seeds, we saw how to set it with torch.manual_seed() but is there a GPU equivalent?
+# (hint: you'll need to look into the documentation for torch.cuda for this one). If there is, set the GPU random seed to 1234.
+print(torch.cuda.manual_seed(1234))
+
+# 5. Create two random tensors of shape (2, 3) and send them both to the GPU (you'll need access to a GPU for this).
+# Set torch.manual_seed(1234) when creating the tensors (this doesn't have to be the GPU random seed).
+
+torch.manual_seed(1234)
+rand_tensor_E = torch.rand(2, 3)
+torch.manual_seed(1234)
+rand_tensor_F = torch.rand(2, 3)
+
+E_on_mps = rand_tensor_E.to(device)
+F_on_mps = rand_tensor_F.to(device)
+
+print(f'E_on_mps device: {E_on_mps.device} F_on_mps device: {F_on_mps.device}')
+
+# 6. Perform a matrix multiplication on the tensors you created in 5 (again, you may have to adjust the shapes of one of the tensors).
+
+reshaped_F = rand_tensor_F.reshape(3, 2)
+matmul_E_F = torch.matmul(rand_tensor_E, reshaped_F)
+print(f'matmul_E_F: {matmul_E_F}')
+# 7. Find the maximum and minimum values of the output of 7.
+
+print(f'min: {matmul_E_F.min()}')
+print(f'max: {matmul_E_F.max()}')
+# 8. Find the maximum and minimum index values of the output of 7.
+
+print(f'min index: {matmul_E_F.argmin()}')
+print(f'max index: {matmul_E_F.argmax()}')
+# 9. Make a random tensor with shape (1, 1, 1, 10) and then create a new tensor with all the 1 dimensions removed to be left with a tensor of shape (10).
+# Set the seed to 7 when you create it and print out the first tensor and it's shape as well as the second tensor and it's shape.
+torch.manual_seed(7)
+rand_tensor_G = torch.rand(1, 1, 1, 10)
+G_squeezed = rand_tensor_G.squeeze()
+
+print(f'rand_tensor_G: {rand_tensor_G}')
+print(f'rand_tensor_G shape: {rand_tensor_G.shape}')
+print(f'G_squeezed: {G_squeezed}')
+print(f'G_squeezed shape: {G_squeezed.shape}')
 
 
 
